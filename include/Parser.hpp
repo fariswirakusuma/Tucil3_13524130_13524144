@@ -14,4 +14,4 @@ struct MapData {
     map<int, cord> waypoints; 
 };
 MapData parseMapInput(std::istream& input);
-void parsing();
+void parsing(MapData& activeMap, bool& isMapLoaded);
