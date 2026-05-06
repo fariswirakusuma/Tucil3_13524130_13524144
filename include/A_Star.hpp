@@ -28,10 +28,10 @@ public:
     cord start;
     cord end;
     void expandNode(Node current);
-    priority_queue<Node, vector<Node>, CompareF> openSet();
+    priority_queue<Node, vector<Node>, CompareF> openSet;
 
-    void step();
-    bool isFinished();
+    void step()override;
+    bool isFinished()override;
     vector<cord> getOpenSetCoords() const  override;
     vector<cord> getClosedSetCoords() const override;
     vector<cord> getFinalPathCoords() const override;

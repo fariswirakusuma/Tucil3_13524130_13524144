@@ -1,6 +1,7 @@
 #pragma once
 #include <bits/stdc++.h>
-
+#include <raylib.h>
+#include <raymath.h>
 using namespace std;
 using cord = pair<int, int>;
 
