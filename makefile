@@ -1,10 +1,10 @@
 # Deteksi OS
-CC := gcc
+CXX := g++
+
 ifeq ($(OS),Windows_NT)
     # Konfigurasi Windows
     TARGET_OS := WINDOWS
     RM := del /Q /F
-    FIX_PATH = $(subst /,\,$1)
     MKDIR := mkdir
     # Linker flags untuk Windows (MinGW)
     LDFLAGS := -lraylib -lgdi32 -lwinmm
@@ -13,7 +13,6 @@ else
     # Konfigurasi Linux
     TARGET_OS := LINUX
     RM := rm -rf
-    FIX_PATH = $1
     MKDIR := mkdir -p
     # Linker flags untuk Linux
     LDFLAGS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
@@ -29,12 +28,12 @@ BIN_DIR     := bin
 # Nama Executable
 TARGET      := $(BIN_DIR)/game$(EXT)
 
-# Source dan Objects
-SRCS        := $(wildcard $(SRC_DIR)/*.c)
-OBJS        := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+# Source dan Objects (Mendeteksi semua file .cpp)
+SRCS        := $(wildcard $(SRC_DIR)/*.cpp)
+OBJS        := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
-# Flag Kompilasi
-CFLAGS      := -Wall -Wextra -std=c11 -I$(INC_DIR)
+# Flag Kompilasi C++
+CXXFLAGS    := -Wall -Wextra -std=c++17 -I$(INC_DIR)
 
 # Rule Utama
 all: prepare $(TARGET)
@@ -48,13 +47,13 @@ else
 	@$(MKDIR) $(OBJ_DIR) $(BIN_DIR)
 endif
 
-# Link executable
+# Link executable (Menyatukan semua file .o menjadi target di folder bin)
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
-# Kompilasi .c ke .o
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Kompilasi .cpp ke .o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Membersihkan hasil build
 clean:
@@ -65,8 +64,9 @@ else
 	@$(RM) $(OBJ_DIR) $(BIN_DIR)
 endif
 
-# Menjalankan aplikasi
 run: all
-	.$(FIX_PATH)/$(TARGET)
-
-.PHONY: all prepare clean run
+ifeq ($(TARGET_OS),WINDOWS)
+	@$(subst /,\,$(TARGET))
+else
+	@./$(TARGET)
+endif
