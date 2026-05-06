@@ -28,7 +28,7 @@ MapData parseMapInput(std::istream& input) {
     return data;
 }
 
-void parsing(MapData& activeMap,bool isMapLoaded){
+void parsing(MapData& activeMap,bool& isMapLoaded){
     auto selection = pfd::open_file("Pilih File Map Teks", ".", 
                                             { "Text Files", "*.txt", "All Files", "*" }).result();
 
