@@ -12,6 +12,8 @@ struct MapData {
     cord start;
     cord target;
     map<int, cord> waypoints; 
+
 };
 MapData parseMapInput(std::istream& input);
-void parsing(MapData& activeMap, bool& isMapLoaded);
+void parsing(MapData& activeMap,bool& isMapLoaded);
+// void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long long time, const string& moves);

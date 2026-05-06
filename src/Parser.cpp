@@ -1,17 +1,18 @@
 #include <Parser.hpp>
 
-MapData parseMapInput(std::istream& input) {
+MapData parseMapInput(istream& input) {
     MapData data;
-    std::string command;
-    
-    input >> command >> data.rows >> data.cols;
-    
+    if (!(input >> data.rows >> data.cols)) return data;
+    input >> ws; 
+
     data.grid.resize(data.rows);
-    data.costMap.assign(data.rows, std::vector<int>(data.cols, 0));
+    data.costMap.assign(data.rows, vector<int>(data.cols, 0));
     
     for (int i = 0; i < data.rows; i++) {
-        input >> data.grid[i];
-        for (int j = 0; j < data.cols; j++) {
+        getline(input, data.grid[i]);
+        data.grid[i].erase(remove(data.grid[i].begin(), data.grid[i].end(), '\r'), data.grid[i].end());
+
+        for (int j = 0; j < (int)data.grid[i].length() && j < data.cols; j++) {
             char cell = data.grid[i][j];
             if (cell == 'Z') data.start = {i, j};
             else if (cell == 'O') data.target = {i, j};
@@ -28,13 +29,12 @@ MapData parseMapInput(std::istream& input) {
     return data;
 }
 
-void parsing(MapData& activeMap,bool& isMapLoaded){
-    auto selection = pfd::open_file("Pilih File Map Teks", ".", 
-                                            { "Text Files", "*.txt", "All Files", "*" }).result();
+void parsing(MapData& activeMap,bool &isMapLoaded){
+    auto selection = pfd::open_file("Pilih File Map Teks", ".", { "Text Files", "*.txt", "All Files", "*" }).result();
 
     if (!selection.empty()) {
-        std::string filePath = selection[0];
-        std::ifstream file(filePath);
+        string filePath = selection[0];
+        ifstream file(filePath);
         
         if (file.is_open()) {
             activeMap = parseMapInput(file);
@@ -45,3 +45,14 @@ void parsing(MapData& activeMap,bool& isMapLoaded){
         }
     }
 }
+
+// void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long long time, const string& moves) {
+//     ofstream file("solution_output.txt");
+//     file << "Algoritma: " << algo << "\n";
+//     file << "Heuristic: " << heuristic << "\n";
+//     file << "Solusi: " << moves << "\n";
+//     file << "Cost: " << cost << "\n";
+//     file << "Iterasi: " << iterations << " iterasi\n";
+//     file << "Waktu: " << time << " ms\n";
+//     file.close();
+// }
