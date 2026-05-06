@@ -22,13 +22,19 @@ struct CompareF {
 };
 
 // template <typename T>
-class A_Star_Solver{
+class A_Star_Solver:public PathFinder{
 public:
 
     cord start;
     cord end;
     void expandNode(Node current);
     priority_queue<Node, vector<Node>, CompareF> openSet();
+
+    void step();
+    bool isFinished();
+    vector<cord> getOpenSetCoords() const  override;
+    vector<cord> getClosedSetCoords() const override;
+    vector<cord> getFinalPathCoords() const override;
 };
 
 double calculate_h(cord current, cord end);
