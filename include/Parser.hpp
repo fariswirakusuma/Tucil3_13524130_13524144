@@ -12,6 +12,7 @@ struct MapData {
     cord start;
     cord target;
     map<int, cord> waypoints; 
+    int maxSequence;
 
 };
 MapData parseMapInput(std::istream& input);

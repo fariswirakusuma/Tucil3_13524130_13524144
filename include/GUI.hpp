@@ -40,6 +40,7 @@ public:
         InitWindow(screen_width, screen_height, "Ice Sliding Puzzle Solver");
         SetTargetFPS(60);
         tileSize = 40;
+        SetExitKey(KEY_Q);
     }
     void resetUIState() {
         isPlaybackActive = false;

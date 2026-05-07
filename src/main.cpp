@@ -17,9 +17,8 @@ int main() {
     MapData activeMap;
     int stepCount = 0;
     long long executionTime = 0;
+    long long accumulatedTimeNs = 0;
     float timer = 0.0f;
-    bool timerStarted = false;
-    auto searchStart = std::chrono::steady_clock::now();
     float speed = 1.0f;
 
     bool closeWindowFromMenu = false;
@@ -69,10 +68,6 @@ int main() {
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setAlgoName("A* Search");
                     currentScreen = HEURISTIC;
-                    // activeAlgorithm = new A_Star_Solver(activeMap);
-                    
-                    
-                    // currentScreen = SOLVING;
                 }
                 else if (IsKeyPressed(KEY_FIVE)) {
                     currentScreen = START;
@@ -81,45 +76,35 @@ int main() {
             }
 
             case SOLVING: {
-                // 1. INPUT HANDLING (Top Priority)
-                if (IsKeyPressed(KEY_B) || IsKeyPressed(KEY_ESCAPE)) {
+                if (IsKeyPressed(KEY_B)) {
                     if (activeAlgorithm != nullptr) {
                         delete activeAlgorithm;
                         activeAlgorithm = nullptr;
                     }
-                    // Reset state untuk sesi berikutnya
                     executionTime = 0;
-                    stepCount = 0;
-                    timerStarted = false;
+                    accumulatedTimeNs = 0;
+                    stepCount = 0; 
                     gui.resetUIState();
                     currentScreen = SELECT;
                     break; 
                 }
 
                 if (activeAlgorithm != nullptr) {
-                    // 2. START TIMER (Saat mulai langkah pertama)
-                    if (!timerStarted && !activeAlgorithm->isFinished()) {
-                        searchStart = std::chrono::steady_clock::now();
-                        timerStarted = true;
-                    }
-
-                    // 3. LOGIC UPDATE (Stepping)
                     if (!activeAlgorithm->isFinished()) {
                         timer += GetFrameTime();
                         if (timer >= (1.0f / speed)) {
+                            auto stepStart = std::chrono::steady_clock::now();
                             activeAlgorithm->step();
-                            stepCount++;
+                            auto stepEnd = std::chrono::steady_clock::now();
+                            accumulatedTimeNs += std::chrono::duration_cast<std::chrono::nanoseconds>(stepEnd - stepStart).count();
+                            stepCount++; 
                             timer = 0.0f;
                         }
                     } 
-                    // 4. STOP TIMER (Tepat saat algoritma selesai)
-                    else if (timerStarted) {
-                        auto searchEnd = std::chrono::steady_clock::now();
-                        executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(searchEnd - searchStart).count();
-                        timerStarted = false; 
+                    else {
+                        executionTime = accumulatedTimeNs / 1000000.0;
                     }
 
-                    // 5. RENDERING
                     gui.render(activeAlgorithm, activeMap, executionTime, stepCount);
                 } 
                 else {
@@ -135,18 +120,12 @@ int main() {
                 int boxHeight = 45;
                 int spacing = 15;
 
-                // Judul Menu
                 DrawText("PILIH HEURISTIC:", startX, startY - 40, 22, SKYBLUE);
-
-                // Render Pilihan Heuristic dengan Styled Box
                 DrawStyledBox(startX, startY, boxWidth, boxHeight, DARKGRAY, "[1] Manhattan Distance (H1)", 18);
                 DrawStyledBox(startX, startY + (boxHeight + spacing), boxWidth, boxHeight, DARKGRAY, "[2] Euclidean Distance (H2)", 18);
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 2, boxWidth, boxHeight, DARKGRAY, "[3] Chebyshev Distance (H3)", 18);
-                
-                // Tombol Navigasi Kembali
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 3 + 20, 120, 35, MAROON, "[B] BACK", 16);
 
-                // Logika Input dan Inisialisasi Solver
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setHeuristicName("Manhattan (H1)");
                     activeAlgorithm = new A_Star_Solver(&activeMap, HEUR_MANHATTAN);
