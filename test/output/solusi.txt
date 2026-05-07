@@ -1,0 +1,6 @@
+Algoritma: A* Search
+Heuristic: Chebyshev (H3)
+Solusi Yang Ditemukan : RUR
+Cost dari Solusi : 26
+Banyak iterasi: 0
+Waktu eksekusi: 0 ms
