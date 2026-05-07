@@ -51,7 +51,7 @@ public:
     }
     void drawAlgorithmOverlay(PathFinder* activeAlgorithm) ;
     void drawFinalPath(const std::vector<cord>& path);
-    void render(PathFinder* activeAlgorithm, const MapData& map, long long execTime, int steps);
+    void render(PathFinder* activeAlgorithm, const MapData& map, long double execTime, int steps);
     string getDirectionString(const std::vector<cord>& path);
     ~GUI();
     void setTileSize(int size);

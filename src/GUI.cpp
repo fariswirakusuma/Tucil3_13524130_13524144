@@ -77,7 +77,7 @@ void GUI::drawFinalPath(const vector<cord>& path) {
 }
 
 
-void GUI::render(PathFinder* activeAlgorithm, const MapData& map, long long execTime, int iterations) {
+void GUI::render(PathFinder* activeAlgorithm, const MapData& map, long double execTime, int iterations) {
     if (activeAlgorithm == nullptr) return;
 
     bool finished = activeAlgorithm->isFinished();
@@ -133,7 +133,7 @@ void GUI::render(PathFinder* activeAlgorithm, const MapData& map, long long exec
     py += 50;
     DrawText("ENGINE STATS", margin, py, 15, GRAY);
     DrawText(TextFormat("Iterasi : %d", iterations), margin, py += 25, 18, RAYWHITE);
-    DrawText(TextFormat("Waktu   : %lld ms", execTime), margin, py += 25, 18, RAYWHITE);
+    DrawText(TextFormat("Waktu   : %llf ms", execTime), margin, py += 25, 18, RAYWHITE);
     DrawText(TextFormat("Cost    : %d", totalCost), margin, py += 25, 18, GOLD);
     
     py += 50;

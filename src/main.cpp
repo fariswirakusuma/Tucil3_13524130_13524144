@@ -16,8 +16,8 @@ int main() {
     uiScreen currentScreen = START;
     MapData activeMap;
     int stepCount = 0;
-    long long executionTime = 0;
-    long long accumulatedTimeNs = 0;
+    long double executionTime = 0.0f;
+    long double accumulatedTimeNs = 0.0f;
     float timer = 0.0f;
     float speed = 1.0f;
 
