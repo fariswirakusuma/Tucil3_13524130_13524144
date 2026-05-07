@@ -30,7 +30,7 @@ MapData parseMapInput(istream& input) {
 }
 
 void parsing(MapData& activeMap,bool &isMapLoaded){
-    auto selection = pfd::open_file("Pilih File Map Teks", ".", { "Text Files", "*.txt", "All Files", "*" }).result();
+    auto selection = pfd::open_file("Pilih File Map Teks", "test/input/", { "Text Files", "*.txt", "All Files", "*" }).result();
 
     if (!selection.empty()) {
         string filePath = selection[0];

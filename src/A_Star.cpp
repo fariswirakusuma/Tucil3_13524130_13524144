@@ -153,13 +153,10 @@ void A_Star_Solver::step() {
 
         State currentState = {current.c.first, current.c.second, current.seq};
 
-        // Skip stale queue entries (fixes wrong A* expansion when PQ contains duplicates)
         auto itBest = gScore.find(currentState);
         if (itBest != gScore.end() && current.g > itBest->second) {
             return;
         }
-
-        // Now it's safe to finalize this state
         if (closedSet.find(currentState) != closedSet.end()) return;
 
         if (current.c.first == p_mapData->target.first && 
@@ -178,7 +175,7 @@ void A_Star_Solver::step() {
 }
 
 A_Star_Solver::A_Star_Solver(MapData* m, HeuristicType heuType) 
-    : heuristic(heuType), p_mapData(m) {
+    :PathFinder(m), heuristic(heuType){
     this->start = m->start;
     this->end = m->target;
     this->found = false;

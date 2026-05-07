@@ -38,7 +38,7 @@ int main() {
                 if (IsKeyPressed(KEY_ONE)) {
                     try {
                         bool isMapLoaded = false;
-                        parsing(activeMap, isMapLoaded); // Fungsi parser yang sudah diperbaiki sebelumnya
+                        parsing(activeMap, isMapLoaded); 
                         if (isMapLoaded) {
                             std::cout << "DEBUG: Map Loaded " << activeMap.rows << "x" << activeMap.cols << "\n";
                             std::cout << "DEBUG: Start at (" << activeMap.start.first << "," << activeMap.start.second << ")\n";
@@ -68,6 +68,11 @@ int main() {
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setAlgoName("A* Search");
                     currentScreen = HEURISTIC;
+                }
+                else if (IsKeyPressed(KEY_THREE)) {
+                    gui.setAlgoName("UCS Search");
+                    currentScreen = SOLVING;
+                    activeAlgorithm = new UCS_Solver(&activeMap);
                 }
                 else if (IsKeyPressed(KEY_FIVE)) {
                     currentScreen = START;
