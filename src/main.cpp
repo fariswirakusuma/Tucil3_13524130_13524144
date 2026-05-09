@@ -11,6 +11,9 @@
 
 using namespace std;
 
+enum SelectedAlgo { ALGO_ASTAR, ALGO_BGFS };
+SelectedAlgo pendingAlgo = ALGO_ASTAR;
+
 int main() {
     GUI gui(1200, 900);
     uiScreen currentScreen = START;
@@ -67,12 +70,23 @@ int main() {
 
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setAlgoName("A* Search");
+                    pendingAlgo = ALGO_ASTAR;
+                    currentScreen = HEURISTIC;
+                }
+                else if (IsKeyPressed(KEY_TWO)) {
+                    gui.setAlgoName("BGFS Search");
+                    pendingAlgo = ALGO_BGFS;
                     currentScreen = HEURISTIC;
                 }
                 else if (IsKeyPressed(KEY_THREE)) {
                     gui.setAlgoName("UCS Search");
                     currentScreen = SOLVING;
                     activeAlgorithm = new UCS_Solver(&activeMap);
+                }
+                else if (IsKeyPressed(KEY_FOUR)) {
+                    gui.setAlgoName("Dijkstra Search");
+                    activeAlgorithm = new Djikstra_Solver(&activeMap);
+                    currentScreen = SOLVING;
                 }
                 else if (IsKeyPressed(KEY_FIVE)) {
                     currentScreen = START;
@@ -131,20 +145,28 @@ int main() {
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 2, boxWidth, boxHeight, DARKGRAY, "[3] Chebyshev Distance (H3)", 18);
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 3 + 20, 120, 35, MAROON, "[B] BACK", 16);
 
+                auto initAlgo = [&](HeuristicType h) {
+                    if (activeAlgorithm != nullptr) delete activeAlgorithm; // Bersihkan memory lama
+
+                    if (pendingAlgo == ALGO_ASTAR) {
+                        activeAlgorithm = new A_Star_Solver(&activeMap, h);
+                    } else {
+                        activeAlgorithm = new BGFS_Solver(&activeMap, h);
+                    }
+                    currentScreen = SOLVING;
+                };
+
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setHeuristicName("Manhattan (H1)");
-                    activeAlgorithm = new A_Star_Solver(&activeMap, HEUR_MANHATTAN);
-                    currentScreen = SOLVING;
+                    initAlgo(HEUR_MANHATTAN);
                 }
                 else if (IsKeyPressed(KEY_TWO)) {
                     gui.setHeuristicName("Euclidean (H2)");
-                    activeAlgorithm = new A_Star_Solver(&activeMap, HEUR_EUCLIDEAN);
-                    currentScreen = SOLVING;
+                    initAlgo(HEUR_EUCLIDEAN);
                 }
                 else if (IsKeyPressed(KEY_THREE)) {
                     gui.setHeuristicName("Chebyshev (H3)");
-                    activeAlgorithm = new A_Star_Solver(&activeMap, HEUR_CHEBYSHEV);
-                    currentScreen = SOLVING;
+                    initAlgo(HEUR_CHEBYSHEV);
                 }
 
                 if (IsKeyPressed(KEY_B)) {
