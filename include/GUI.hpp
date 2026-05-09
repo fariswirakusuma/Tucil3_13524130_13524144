@@ -47,6 +47,7 @@ public:
         playbackIndex = 0;
         resultProcessed = false;
         stepCount = 0;
+        totalCost = 0;
         finalPath.clear();
     }
     void drawAlgorithmOverlay(PathFinder* activeAlgorithm) ;
