@@ -24,6 +24,9 @@ int main() {
     float timer = 0.0f;
     float speed = 1.0f;
 
+    float saveNotifTimer = 0.0f;
+    bool showSaveNotif = false;
+
     bool closeWindowFromMenu = false;
     PathFinder* activeAlgorithm = nullptr;
 
@@ -107,6 +110,17 @@ int main() {
                     currentScreen = SELECT;
                     break; 
                 }
+                else if (IsKeyPressed(KEY_S)){
+                    if (activeAlgorithm != nullptr && activeAlgorithm->isFinished()) {
+        
+                        
+                        int finalCost = (int)activeAlgorithm->getTotalCost();
+                        saveSolution(gui.getAlgoName(), gui.getHeuristicName(), finalCost, stepCount, executionTime, gui.getSolutionMoves());
+
+                        showSaveNotif = true;
+                        saveNotifTimer = 2.0f;
+                    }
+                }
 
                 if (activeAlgorithm != nullptr) {
                     if (!activeAlgorithm->isFinished()) {
@@ -146,7 +160,7 @@ int main() {
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 3 + 20, 120, 35, MAROON, "[B] BACK", 16);
 
                 auto initAlgo = [&](HeuristicType h) {
-                    if (activeAlgorithm != nullptr) delete activeAlgorithm; // Bersihkan memory lama
+                    if (activeAlgorithm != nullptr) delete activeAlgorithm;
 
                     if (pendingAlgo == ALGO_ASTAR) {
                         activeAlgorithm = new A_Star_Solver(&activeMap, h);
@@ -176,6 +190,25 @@ int main() {
             }
             default:
                 break;
+        }                
+        if (showSaveNotif) {
+            saveNotifTimer -= GetFrameTime();
+            if (saveNotifTimer <= 0.0f) {
+                showSaveNotif = false;
+            }
+        }
+        if (showSaveNotif) {
+            int screenW = GetScreenWidth();
+            int screenH = GetScreenHeight();
+            
+            int boxWidth = 320;
+            int boxHeight = 40;
+            int boxX = (screenW / 2) - (boxWidth / 2);
+            int boxY = screenH - 80;
+
+            DrawRectangle(boxX, boxY, boxWidth, boxHeight, Fade(DARKGREEN, 0.85f));
+            DrawRectangleLines(boxX, boxY, boxWidth, boxHeight, LIME);
+            DrawText("Solusi berhasil disimpan ke solution.txt", boxX + 15, boxY + 12, 14, RAYWHITE);
         }
 
         EndDrawing();

@@ -59,6 +59,10 @@ public:
     void saveSolutionToTxt(const MapData&, const std::string& moves);
     void setAlgoName(const std::string& name) { currentAlgoName = name; }
     void setHeuristicName(const std::string& name) { currentHeuristicName = name; };
+    int getTotalCost() const { return totalCost; };
+    string getAlgoName() const { return currentAlgoName; };
+    string getHeuristicName() const { return currentHeuristicName; };
+    string getSolutionMoves() const { return solutionMoves; };
 };
 
 void DrawStyledBox(int x, int y, int width, int height, Color color, const char* text, int fontSize);

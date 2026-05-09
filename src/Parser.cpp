@@ -46,13 +46,13 @@ void parsing(MapData& activeMap,bool &isMapLoaded){
     }
 }
 
-// void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long long time, const string& moves) {
-//     ofstream file("solution_output.txt");
-//     file << "Algoritma: " << algo << "\n";
-//     file << "Heuristic: " << heuristic << "\n";
-//     file << "Solusi: " << moves << "\n";
-//     file << "Cost: " << cost << "\n";
-//     file << "Iterasi: " << iterations << " iterasi\n";
-//     file << "Waktu: " << time << " ms\n";
-//     file.close();
-// }
+void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long double time, const string& moves) {
+    ofstream file("test/output/solusi.txt");
+    file << "Algoritma: " << algo << "\n";
+    file << "Heuristic: " << heuristic << "\n";
+    file << "Solusi: " << moves << "\n";
+    file << "Cost: " << cost << "\n";
+    file << "Iterasi: " << iterations << " iterasi\n";
+    file << "Waktu: " << time << " ms\n";
+    file.close();
+}
