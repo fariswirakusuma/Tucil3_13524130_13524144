@@ -29,7 +29,7 @@ BIN_DIR     := bin
 TARGET      := $(BIN_DIR)/game$(EXT)
 
 # Source dan Objects (Mendeteksi semua file .cpp)
-SRCS        := $(wildcard $(SRC_DIR)/*.cpp)
+SRCS        := $(filter-out $(SRC_DIR)/BGFS.cpp,$(wildcard $(SRC_DIR)/*.cpp))
 OBJS        := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Flag Kompilasi C++

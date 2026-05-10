@@ -1,7 +1,7 @@
 #pragma once
 
 #include <PathFinder.hpp>
-#include <BGFS.hpp>
+#include <GBFS.hpp>
 #include <Djikstra.hpp>
 #include <A_Star.hpp>
 #include <UCS.hpp>

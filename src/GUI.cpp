@@ -1,6 +1,6 @@
 #include <GUI.hpp>
 #include <PathFinder.hpp>
-#include <BGFS.hpp>
+#include <GBFS.hpp>
 #include <Djikstra.hpp>
 #include <A_Star.hpp>
 
@@ -127,8 +127,8 @@ void GUI::render(PathFinder* activeAlgorithm, const MapData& map, long double ex
     
     py += 60;
     DrawText("CONFIG", margin, py, 15, GRAY);
-    DrawText(TextFormat("Algo : %s", currentAlgoName.c_str()), margin, py += 25, 17, LIGHTGRAY);
-    if (getAlgoName() == "A* Search"|| getAlgoName() == "BGFS Search")DrawText(TextFormat("Heur : %s", currentHeuristicName.c_str()), margin, py += 25, 17, LIGHTGRAY);
+DrawText(TextFormat("Algo : %s", currentAlgoName.c_str()), margin, py += 25, 17, LIGHTGRAY);
+    if (getAlgoName() == "A* Search"|| getAlgoName() == "GBFS Search")DrawText(TextFormat("Heur : %s", currentHeuristicName.c_str()), margin, py += 25, 17, LIGHTGRAY);
     
     
     py += 50;

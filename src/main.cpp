@@ -3,7 +3,7 @@
 #include <PathFinder.hpp>
 #include <Parser.hpp>
 #include <GUI.hpp>
-#include <BGFS.hpp>
+#include <GBFS.hpp>
 #include <Djikstra.hpp>
 #include <A_Star.hpp>
 #include <UCS.hpp>
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-enum SelectedAlgo { ALGO_ASTAR, ALGO_BGFS };
+enum SelectedAlgo { ALGO_ASTAR, ALGO_GBFS };
 SelectedAlgo pendingAlgo = ALGO_ASTAR;
 
 int main() {
@@ -66,7 +66,7 @@ int main() {
                 DrawText("PILIH ALGORITMA", centerX - (MeasureText("PILIH ALGORITMA", 60) / 2), 200, 60, DARKBLUE);
                 
                 DrawStyledBox(centerX - 150, 320, 300, 60, SKYBLUE, "[1] A*", 20);
-                DrawStyledBox(centerX - 150, 400, 300, 60, SKYBLUE, "[2] BGFS", 20);
+DrawStyledBox(centerX - 150, 400, 300, 60, SKYBLUE, "[2] GBFS", 20);
                 DrawStyledBox(centerX - 150, 480, 300, 60, SKYBLUE, "[3] UCS", 20);
                 DrawStyledBox(centerX - 150, 560, 300, 60, SKYBLUE, "[4] Dijkstra", 20);
                 DrawStyledBox(centerX - 150, 640, 300, 60, MAROON, "[5] Kembali", 20);
@@ -77,8 +77,8 @@ int main() {
                     currentScreen = HEURISTIC;
                 }
                 else if (IsKeyPressed(KEY_TWO)) {
-                    gui.setAlgoName("BGFS Search");
-                    pendingAlgo = ALGO_BGFS;
+gui.setAlgoName("GBFS Search");
+pendingAlgo = ALGO_GBFS;
                     currentScreen = HEURISTIC;
                 }
                 else if (IsKeyPressed(KEY_THREE)) {
@@ -165,7 +165,7 @@ int main() {
                     if (pendingAlgo == ALGO_ASTAR) {
                         activeAlgorithm = new A_Star_Solver(&activeMap, h);
                     } else {
-                        activeAlgorithm = new BGFS_Solver(&activeMap, h);
+activeAlgorithm = new GBFS_Solver(&activeMap, h);
                     }
                     currentScreen = SOLVING;
                 };
