@@ -118,7 +118,7 @@ int main() {
                         saveSolution(gui.getAlgoName(), gui.getHeuristicName(), finalCost, stepCount, executionTime, gui.getSolutionMoves());
 
                         showSaveNotif = true;
-                        saveNotifTimer = 2.0f;
+                        saveNotifTimer = 1.3f;
                     }
                 }
 
