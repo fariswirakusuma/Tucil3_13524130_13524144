@@ -6,6 +6,15 @@
 - ### 13524130 - Faris Wirakusuma
 - ### 13524144 - Jonathan Harijadi
 
+---
+> [!IMPORTANT]
+> **Kontrol Navigasi Eksklusif Keyboard**: Seluruh interaksi dalam program ini menggunakan input keyboard. **Tidak ada** dukungan kontrol menggunakan **mouse**.
+
+.
+
+> [!NOTE]
+> **Lokasi Penyimpanan File**: File yang sudah tersimpan akan muncul pada lokasi `output/solusi.txt`.
+---
 ## Penjelasan singkat program
 
 Program ini dirancang untuk menyelesaikan permasalahan navigasi pada grid licin (Ice Sliding Physics), di mana aktor hanya bisa berhenti jika menabrak rintangan atau mencapai tepi peta. Program mengekstraksi data dari file teks yang berisi representasi visual peta dan bobot biaya (cost) setiap ubin.
@@ -70,6 +79,3 @@ Jika berhasil, file executable akan muncul di direktori bin/.
 
   - [Q]: Keluar dari program.
   
-
-> ### 📝 NOTE: File yang sudah tersave akan muncul pada lokasi berikut:
-> <code> output/solusi.txt </code>
