@@ -1,3 +1,7 @@
+## ***ICE SLIDING PHYSICS***
+
+<img src="assets/demo.gif" width="300" alt="Demo Algoritma">
+
 ##  👤 Author:
 - ### 13524130 - Faris Wirakusuma
 - ### 13524144 - Jonathan Harijadi
