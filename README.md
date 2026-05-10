@@ -10,7 +10,7 @@
 > [!IMPORTANT]
 > **Kontrol Navigasi Eksklusif Keyboard**: Seluruh interaksi dalam program ini menggunakan input keyboard. **Tidak ada** dukungan kontrol menggunakan **mouse**.
 
-.
+---
 
 > [!NOTE]
 > **Lokasi Penyimpanan File**: File yang sudah tersimpan akan muncul pada lokasi `output/solusi.txt`.
@@ -56,7 +56,8 @@ Jika berhasil, file executable akan muncul di direktori bin/.
 ./bin/<nama_executable>
 ```
 - ### 📂 Load File
-   - #### Tekan tombol [1] pada menu utama untuk membuka dialog pencarian file. lalu load txt file pada : <code>test/input/<nama_txtfile>.txt </code>
+   - #### Tekan tombol [1] pada menu utama untuk membuka dialog pencarian file. lalu load txt file pada : file file yang tersedia file aslinya terdapat pada <code> test/input/namatxt.txt </code>
+
 
 - ### Kontrol GUI
   - Pencarian: Klik tombol algoritma (A*/UCS/Algoritma lainnya) untuk memulai searching.

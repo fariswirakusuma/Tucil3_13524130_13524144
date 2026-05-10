@@ -34,17 +34,21 @@ void parsing(MapData& activeMap,bool &isMapLoaded){
 
     if (!selection.empty()) {
         string filePath = selection[0];
-        ifstream file(filePath);
-        
-        if (file.is_open()) {
-            activeMap = parseMapInput(file);
-            if (activeMap.rows > 0) {
-                isMapLoaded = true;
-            }
-            file.close();
-        }
+        parsing(activeMap, isMapLoaded, filePath);
     }
 }
+
+void parsing(MapData& activeMap, bool& isMapLoaded, const std::string& filePath) {
+    ifstream file(filePath);
+    if (file.is_open()) {
+        activeMap = parseMapInput(file);
+        isMapLoaded = (activeMap.rows > 0);
+        file.close();
+    } else {
+        isMapLoaded = false;
+    }
+}
+
 
 void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long double time, const string& moves) {
     ofstream file("test/output/solusi.txt");

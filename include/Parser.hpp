@@ -16,5 +16,7 @@ struct MapData {
 
 };
 MapData parseMapInput(std::istream& input);
-void parsing(MapData& activeMap,bool& isMapLoaded);
+void parsing(MapData& activeMap, bool& isMapLoaded);
+void parsing(MapData& activeMap, bool& isMapLoaded, const std::string& filePath);
+
 void saveSolution(const string& algo, const string& heuristic, int cost, int iterations, long double time, const string& moves);

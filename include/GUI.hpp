@@ -9,7 +9,7 @@
 #include <raymath.h>
 
 
-enum uiScreen { START, SELECT, HEURISTIC, SOLVING };
+enum uiScreen { START,LOAD,SELECT, HEURISTIC, SOLVING };
 class GUI {
 private:
     std::string currentAlgoName = "";    
