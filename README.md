@@ -35,6 +35,7 @@ Program ini dirancang untuk menyelesaikan permasalahan navigasi pada grid licin 
 
 * **Raylib v4.5+**: Library utama untuk GUI dan Rendering.
 * **GCC/G++**: Mendukung standar C++17.
+* **<code><bits/stdc++></code> library**: Untuk library tambahan;
 * **Make/CMake**: Untuk sistem build otomatis.
 
 ## Build dan Run

@@ -27,7 +27,8 @@ private:
 
     int totalPathSteps = 0;
     int totalCost = 0;
-    long long executionTime = 0;
+    long double executionTime = 0.0;
+    // double simulationStartTime = 0.0;
     string solutionMoves = "";
 
     bool isPlaybackActive = false; 
@@ -63,6 +64,7 @@ public:
     string getAlgoName() const { return currentAlgoName; };
     string getHeuristicName() const { return currentHeuristicName; };
     string getSolutionMoves() const { return solutionMoves; };
+    long double getExecutionTime() const { return executionTime; };
 };
 
 void DrawStyledBox(int x, int y, int width, int height, Color color, const char* text, int fontSize);

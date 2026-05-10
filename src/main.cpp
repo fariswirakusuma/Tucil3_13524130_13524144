@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <chrono>
 #include <raylib.h>
 #include <PathFinder.hpp>
 #include <Parser.hpp>
@@ -16,7 +17,6 @@ SelectedAlgo pendingAlgo = ALGO_ASTAR;
 static vector<string> listInputFiles(const string& dirPath) {
     vector<string> files;
     try {
-        // C++17 filesystem
         for (const auto& entry : std::filesystem::directory_iterator(dirPath)) {
             if (!entry.is_regular_file()) continue;
             auto p = entry.path();
@@ -26,7 +26,6 @@ static vector<string> listInputFiles(const string& dirPath) {
         }
         sort(files.begin(), files.end());
     } catch (...) {
-        // ignore
     }
     return files;
 }
@@ -38,8 +37,9 @@ int main() {
     MapData activeMap;
 
     int stepCount = 0;
-    long double executionTime = 0.0f;
-    long double accumulatedTimeNs = 0.0f;
+    long double cpuExecutionTime = 0.0;    
+    long double simulationTime = 0.0;      
+    long double simulationStartTime = 0.0; 
     float timer = 0.0f;
     float speed = 1.0f;
 
@@ -49,7 +49,6 @@ int main() {
     bool closeWindowFromMenu = false;
     PathFinder* activeAlgorithm = nullptr;
 
-    // For LOAD screen
     vector<string> inputFiles = listInputFiles("test/input");
     int selectedInputIndex = -1;
 
@@ -93,26 +92,16 @@ int main() {
                     break;
                 }
 
-                int maxItemsToShow = 10; // simple cap for UI
+                int maxItemsToShow = 10;
                 int count = min((int)inputFiles.size(), maxItemsToShow);
 
                 for (int i = 0; i < count; i++) {
                     string label = TextFormat("[%d] %s", i + 1, inputFiles[i].c_str());
                     Color col = (i == selectedInputIndex) ? SKYBLUE : DARKGRAY;
                     DrawStyledBox(startX, startY + i * (boxHeight + spacingY), boxWidth, boxHeight, col, label.c_str(), 16);
-
-                    // keyboard selection
-                    // Raylib key mapping is platform specific; so only support up to 9 explicitly.
-                    if (i == 0 && IsKeyPressed(KEY_ONE)) selectedInputIndex = 0;
-
-                    else if (i == 1 && IsKeyPressed(KEY_TWO)) selectedInputIndex = 1;
-                    else if (i == 2 && IsKeyPressed(KEY_THREE)) selectedInputIndex = 2;
-                    else if (i == 3 && IsKeyPressed(KEY_FOUR)) selectedInputIndex = 3;
-                    else if (i == 4 && IsKeyPressed(KEY_FIVE)) selectedInputIndex = 4;
-                    else if (i == 5 && IsKeyPressed(KEY_SIX)) selectedInputIndex = 5;
-                    else if (i == 6 && IsKeyPressed(KEY_SEVEN)) selectedInputIndex = 6;
-                    else if (i == 7 && IsKeyPressed(KEY_EIGHT)) selectedInputIndex = 7;
-                    else if (i == 8 && IsKeyPressed(KEY_NINE)) selectedInputIndex = 8;
+                    if (i < 9 && IsKeyPressed(KEY_ONE + i)) {
+                        selectedInputIndex = i;
+                    }
                 }
 
                 DrawStyledBox(startX, startY + count * (boxHeight + spacingY) + 20, boxWidth, boxHeight, MAROON, "[B] BACK", 16);
@@ -120,8 +109,6 @@ int main() {
                 if (IsKeyPressed(KEY_B)) {
                     currentScreen = START;
                 }
-
-                // Confirm selection (enter)
                 if (selectedInputIndex >= 0 && IsKeyPressed(KEY_ENTER)) {
                     string filePath = string("test/input/") + inputFiles[selectedInputIndex];
                     bool isMapLoaded = false;
@@ -136,7 +123,6 @@ int main() {
                 }
 
                 DrawText("Pilih [1..N], lalu tekan [ENTER]", startX, startY - 60, 18, GRAY);
-
                 break;
             }
 
@@ -150,6 +136,12 @@ int main() {
                 DrawStyledBox(centerX - 150, 560, 300, 60, SKYBLUE, "[4] Dijkstra", 20);
                 DrawStyledBox(centerX - 150, 640, 300, 60, MAROON, "[5] Kembali", 20);
 
+                auto resetTimers = [&]() {
+                    cpuExecutionTime = 0.0;
+                    simulationTime = 0.0;
+                    simulationStartTime = GetTime();
+                };
+
                 if (IsKeyPressed(KEY_ONE)) {
                     gui.setAlgoName("A* Search");
                     pendingAlgo = ALGO_ASTAR;
@@ -160,16 +152,17 @@ int main() {
                     currentScreen = HEURISTIC;
                 } else if (IsKeyPressed(KEY_THREE)) {
                     gui.setAlgoName("UCS Search");
-                    currentScreen = SOLVING;
                     activeAlgorithm = new UCS_Solver(&activeMap);
+                    resetTimers();
+                    currentScreen = SOLVING;
                 } else if (IsKeyPressed(KEY_FOUR)) {
                     gui.setAlgoName("Dijkstra Search");
                     activeAlgorithm = new Djikstra_Solver(&activeMap);
+                    resetTimers();
                     currentScreen = SOLVING;
                 } else if (IsKeyPressed(KEY_FIVE)) {
                     currentScreen = START;
                 }
-
                 break;
             }
 
@@ -184,7 +177,9 @@ int main() {
                 DrawStyledBox(startX, startY, boxWidth, boxHeight, DARKGRAY, "[1] Manhattan Distance (H1)", 18);
                 DrawStyledBox(startX, startY + (boxHeight + spacing), boxWidth, boxHeight, DARKGRAY, "[2] Euclidean Distance (H2)", 18);
                 DrawStyledBox(startX, startY + (boxHeight + spacing) * 2, boxWidth, boxHeight, DARKGRAY, "[3] Chebyshev Distance (H3)", 18);
-                DrawStyledBox(startX, startY + (boxHeight + spacing) * 3 + 20, 120, 35, MAROON, "[B] BACK", 16);
+
+                
+                DrawStyledBox(startX, startY + (boxHeight + spacing) * 4 + 20, 120, 35, MAROON, "[B] BACK", 16);
 
                 auto initAlgo = [&](HeuristicType h) {
                     if (activeAlgorithm != nullptr) delete activeAlgorithm;
@@ -194,19 +189,16 @@ int main() {
                     } else {
                         activeAlgorithm = new GBFS_Solver(&activeMap, h);
                     }
+                    cpuExecutionTime = 0.0;
+                    simulationTime = 0.0;
+                    simulationStartTime = GetTime();  
                     currentScreen = SOLVING;
                 };
 
-                if (IsKeyPressed(KEY_ONE)) {
-                    gui.setHeuristicName("Manhattan (H1)");
-                    initAlgo(HEUR_MANHATTAN);
-                } else if (IsKeyPressed(KEY_TWO)) {
-                    gui.setHeuristicName("Euclidean (H2)");
-                    initAlgo(HEUR_EUCLIDEAN);
-                } else if (IsKeyPressed(KEY_THREE)) {
-                    gui.setHeuristicName("Chebyshev (H3)");
-                    initAlgo(HEUR_CHEBYSHEV);
-                }
+                if (IsKeyPressed(KEY_ONE)) { gui.setHeuristicName("Manhattan (H1)"); initAlgo(HEUR_MANHATTAN); } 
+                else if (IsKeyPressed(KEY_TWO)) { gui.setHeuristicName("Euclidean (H2)"); initAlgo(HEUR_EUCLIDEAN); } 
+                else if (IsKeyPressed(KEY_THREE)) { gui.setHeuristicName("Chebyshev (H3)"); initAlgo(HEUR_CHEBYSHEV); }
+              
 
                 if (IsKeyPressed(KEY_B)) {
                     currentScreen = SELECT;
@@ -220,8 +212,7 @@ int main() {
                         delete activeAlgorithm;
                         activeAlgorithm = nullptr;
                     }
-                    executionTime = 0;
-                    accumulatedTimeNs = 0;
+                    cpuExecutionTime = 0.0;
                     stepCount = 0;
                     gui.resetUIState();
                     currentScreen = SELECT;
@@ -229,7 +220,7 @@ int main() {
                 } else if (IsKeyPressed(KEY_S)) {
                     if (activeAlgorithm != nullptr && activeAlgorithm->isFinished()) {
                         int finalCost = (int)activeAlgorithm->getTotalCost();
-                        saveSolution(gui.getAlgoName(), gui.getHeuristicName(), finalCost, stepCount, executionTime, gui.getSolutionMoves());
+                        saveSolution(gui.getAlgoName(), gui.getHeuristicName(), finalCost, stepCount, cpuExecutionTime, gui.getSolutionMoves());
 
                         showSaveNotif = true;
                         saveNotifTimer = 1.3f;
@@ -239,19 +230,24 @@ int main() {
                 if (activeAlgorithm != nullptr) {
                     if (!activeAlgorithm->isFinished()) {
                         timer += GetFrameTime();
+                        
+                        simulationTime = (GetTime() - simulationStartTime) * 1000.0;
+                        
                         if (timer >= (1.0f / speed)) {
-                            auto stepStart = std::chrono::steady_clock::now();
+                            auto startNodeEx = std::chrono::steady_clock::now();
                             activeAlgorithm->step();
-                            auto stepEnd = std::chrono::steady_clock::now();
-                            accumulatedTimeNs += std::chrono::duration_cast<std::chrono::nanoseconds>(stepEnd - stepStart).count();
+                            auto endNodeEx = std::chrono::steady_clock::now();
+                            
+                            cpuExecutionTime += std::chrono::duration<long double, std::milli>(endNodeEx - startNodeEx).count();
+
                             stepCount++;
                             timer = 0.0f;
                         }
-                    } else {
-                        executionTime = accumulatedTimeNs / 1000000.0;
-                    }
+                    } 
 
-                    gui.render(activeAlgorithm, activeMap, executionTime, stepCount);
+                    gui.render(activeAlgorithm, activeMap, cpuExecutionTime, stepCount);
+                    DrawText(TextFormat("Sim Time : %.2Lf ms", simulationTime), 15, 290, 16, YELLOW); 
+
                 } else {
                     DrawText("WARNING: activeAlgorithm is NULL", 350, 300, 20, RED);
                     DrawText("Tekan [B] untuk kembali", 350, 330, 16, DARKGRAY);
@@ -268,9 +264,7 @@ int main() {
             if (saveNotifTimer <= 0.0f) {
                 showSaveNotif = false;
             }
-        }
 
-        if (showSaveNotif) {
             int screenW = GetScreenWidth();
             int screenH = GetScreenHeight();
 
@@ -281,7 +275,7 @@ int main() {
 
             DrawRectangle(boxX, boxY, boxWidth, boxHeight, Fade(DARKGREEN, 0.85f));
             DrawRectangleLines(boxX, boxY, boxWidth, boxHeight, LIME);
-            DrawText("Solusi berhasil disimpan ke solution.txt", boxX + 15, boxY + 12, 14, RAYWHITE);
+            DrawText("Solusi berhasil disimpan ke output/solusi.txt", boxX + 15, boxY + 12, 14, RAYWHITE);
         }
 
         EndDrawing();
@@ -293,4 +287,3 @@ int main() {
 
     return 0;
 }
-

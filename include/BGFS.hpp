@@ -11,7 +11,7 @@ public:
     IterablePriorityQueue<Node, vector<Node>, CompareF> openSet;
     set<State> closedSet;
     map<State, State> parentMap;
-    map<State, double> actualG; // Untuk menyimpan cost asli
+    map<State, double> actualG; 
 
     BGFS_Solver(MapData* m, HeuristicType hType);
     void step() override;
